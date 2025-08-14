@@ -2,6 +2,13 @@
 from fastapi import FastAPI
 from . import schemas  # Importamos nuestros esquemas
 from datetime import datetime
+from . import schemas, models # Importamos models
+from .database import engine # Importamos el engine
+
+# Esta línea le dice a SQLAlchemy que cree todas las tablas definidas
+# en nuestros modelos (en este caso, solo la tabla 'articles').
+# Se ejecutará una sola vez cuando la aplicación se inicie.
+models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="PagePal API",
