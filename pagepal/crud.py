@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from . import models, schemas
+from . import models, schemas, services
 
 def get_article(db: Session, article_id: int):
     """
@@ -9,17 +9,20 @@ def get_article(db: Session, article_id: int):
 
 def create_article(db: Session, article: schemas.ArticleCreate):
     """
-    Crea un nuevo artículo en la base de datos.
-    Por ahora, el título y el contenido son valores placeholder.
+    Crea un nuevo artículo en la base de datos, extrayendo primero
+    el contenido real de la URL.
     """
-    # Creamos un objeto del modelo de SQLAlchemy con los datos del esquema Pydantic.
-    # NOTA: Aún no estamos extrayendo el contenido real. ¡Eso viene después!
+     # Llamamos a nuestro nuevo servicio para obtener el contenido
+    extracted_data = services.extract_article_content(url=str(article.url))
+
+    # Usamos los datos extraídos para crear el objeto de la BD
     db_article = models.Article(
-        url=str(article.url), # Convertimos la HttpUrl de Pydantic a string
-        title="(Título pendiente de extracción)",
-        content="(Contenido pendiente de extracción)"
+        url=str(article.url),
+        title=extracted_data["title"],
+        content=extracted_data["content"]
     )
-    db.add(db_article)  # Añade el objeto a la sesión de la BD.
-    db.commit()         # Confirma los cambios en la BD (guarda).
-    db.refresh(db_article) # Refresca el objeto con los datos de la BD (como el id).
+    
+    db.add(db_article)
+    db.commit()
+    db.refresh(db_article)
     return db_article
