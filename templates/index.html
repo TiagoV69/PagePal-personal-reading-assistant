@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PagePal - Tu Asistente de Lectura</title>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: auto; padding: 20px; background-color: #f4f4f9; color: #333; }
+        h1, h2 { color: #444; }
+        form { margin-bottom: 2em; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        input[type="url"] { width: 70%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
+        button { padding: 10px 15px; border: none; background-color: #007bff; color: white; border-radius: 4px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        .article { background: white; padding: 15px; margin-bottom: 1em; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .article h3 { margin-top: 0; }
+        .article a { color: #007bff; text-decoration: none; }
+        .article p { white-space: pre-wrap; word-wrap: break-word; }
+    </style>
+</head>
+<body>
+    <h1>📚 PagePal</h1>
+    <p>Guarda artículos interesantes de la web para leerlos más tarde sin distracciones.</p>
+
+    <form action="/add" method="post">
+        <label for="url">Pega la URL del artículo:</label><br><br>
+        <input type="url" id="url" name="url" required placeholder="https://ejemplo.com/mi-articulo">
+        <button type="submit">Guardar Artículo</button>
+    </form>
+
+    <h2>Artículos Guardados</h2>
+    <!-- Este es un bucle de Jinja2. Recorrerá la lista de artículos que le pasemos desde Python. -->
+    {% for article in articles %}
+    <div class="article">
+        <h3>{{ article.title }}</h3>
+        <small><a href="{{ article.url }}" target="_blank">Ver original</a> - Guardado: {{ article.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+        <hr>
+        <!-- Mostramos el contenido del artículo -->
+        <p>{{ article.content }}</p>
+    </div>
+    {% endfor %}
+</body>
+</html>
+
+  

@@ -26,3 +26,10 @@ def create_article(db: Session, article: schemas.ArticleCreate):
     db.commit()
     db.refresh(db_article)
     return db_article
+
+def get_articles(db: Session, skip: int = 0, limit: int = 100):
+    """
+    Recupera una lista de artículos de la base de datos, con paginación opcional.
+    """
+    # Ordenamos por ID descendente para ver los artículos más nuevos primero.
+    return db.query(models.Article).order_by(models.Article.id.desc()).offset(skip).limit(limit).all()
